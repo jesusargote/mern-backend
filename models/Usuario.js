@@ -1,8 +1,8 @@
 // Importamos mongoose para definir el esquema del modelo
 import mongoose from 'mongoose';
 
-// Importamos bcrypt para hashear (encriptar) las contraseñas
-import bcrypt from 'bcrypt';  
+// Importamos bcryptjs para hashear (encriptar) las contraseñas
+import bcryptjs from 'bcryptjs';  
 
 // Definimos el esquema del modelo Usuario
 const usuarioSchema = mongoose.Schema({
@@ -42,17 +42,17 @@ usuarioSchema.pre('save', async function(next) {
     }
 
     // Genera un "salt" (valor aleatorio) para hacer el hash más seguro
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcryptjs.genSalt(10);
 
     // Hashea la contraseña del usuario antes de guardarla
-    this.password = await bcrypt.hash(this.password, salt);
+    this.password = await bcryptjs.hash(this.password, salt);
 });
 
 
 // Método personalizado para comparar contraseñas
 usuarioSchema.methods.comprobarPassword = async function(passwordFormulario) {
     // Compara la contraseña ingresada con la contraseña hasheada en la base de datos
-    return await bcrypt.compare(passwordFormulario, this.password);
+    return await bcryptjs.compare(passwordFormulario, this.password);
 };
 
 
